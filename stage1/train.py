@@ -18,7 +18,7 @@ from transformers import (
 
 from stage1.ds_wrapper import make_data_module
 from stage1.forward import replace_forward
-from stage1.train import GemmaSFTTrainer
+from stage1.sft import GemmaSFTTrainer
 from stage1.utils import _freeze_llm, _unfreeze_vision, _print_trainable_parameters, _log
 
 
