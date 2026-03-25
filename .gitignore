@@ -1,0 +1,8 @@
+uv.lock
+__pycache__
+.venv
+output
+pyproject.toml
+.DS_Store
+*.pyc
+*.bin

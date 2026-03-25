@@ -11,9 +11,9 @@ def _freeze_llm(model):
     _set_requires_grad(model.language_model.parameters(), False)
 
 
-def _unfreeze_vision(model, compute_dtype, device):
+def _unfreeze_image_encoder(model, compute_dtype, device):
     model.vision_tower.to(dtype=compute_dtype, device=device)
-    _set_requires_grad(model.vision_tower.parameters(), True)
+    _set_requires_grad(model.vision_tower.parameters(), False)
     _set_requires_grad(model.multi_modal_projector.parameters(), True)
 
 

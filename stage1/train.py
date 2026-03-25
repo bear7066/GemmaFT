@@ -19,7 +19,7 @@ from transformers import (
 from stage1.ds_wrapper import make_data_module
 from stage1.forward import replace_forward
 from stage1.sft import GemmaSFTTrainer
-from stage1.utils import _freeze_llm, _unfreeze_vision, _print_trainable_parameters, _log
+from stage1.utils import _freeze_llm, _unfreeze_image_encoder, _print_trainable_parameters, _log
 
 
 @dataclass
@@ -43,9 +43,9 @@ class DataArguments:
 
 @dataclass
 class Stage1TrainingArguments(TrainingArguments):
-    vision_lr: Optional[float] = field(
+    image_encoder_lr: Optional[float] = field(
         default=2e-5,
-        metadata={"help": "Vision Tower learning rate"},
+        metadata={"help": "Image Encoder learning rate"},
     )
     projector_lr: Optional[float] = field(
         default=2e-5,
@@ -77,9 +77,9 @@ def train():
         attn_implementation="eager",  # use eager instead of flash attention first to prevent tensor mismatch
     )
 
-    # freeze lm backbone, unfreeze vision components
+    # freeze lm backbone, unfreeze image encoder components
     _freeze_llm(model)
-    _unfreeze_vision(model, compute_dtype, device)
+    _unfreeze_image_encoder(model, compute_dtype, device)
 
     # cache gradient checkpoint and reused it(which can save VRAM)
     if training_args.gradient_checkpointing:
@@ -88,7 +88,7 @@ def train():
 
     # model config
     model.config.use_cache = False # close kv-cache to purely train 
-    model.config.vision_lr = training_args.vision_lr
+    model.config.image_encoder_lr = training_args.image_encoder_lr
     model.config.projector_lr = training_args.projector_lr
 
     # processor & ds wrapper

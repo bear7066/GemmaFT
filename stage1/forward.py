@@ -78,8 +78,8 @@ def _gemma3_forward(
         if not is_torchdynamo_compiling() and inputs_embeds[special_image_mask].numel() != image_features.numel():
             img_token_count = special_image_mask.sum(dim=1).sum(dim=0)[0]
             raise ValueError(
-                f"圖像 token 數量不符：文字中有 {img_token_count} 個 image token，"
-                f"但圖像 embedding 有 {image_features.shape[0] * image_features.shape[1]} 個 token。"
+                f"image token number is not match: text has {img_token_count} image tokens, "
+                f"but image embedding has {image_features.shape[0] * image_features.shape[1]} tokens."
             )
 
         image_features = image_features.to(inputs_embeds.device, inputs_embeds.dtype)
